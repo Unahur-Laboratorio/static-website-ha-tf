@@ -22,21 +22,21 @@ resource "aws_security_group" "ha_alb_sg" {
 
 resource "aws_security_group" "ha_ec2_sg" {
   name        = "ha-ec2-sg"
-  description = "HTTP desde ALB y SSH administrativo"
+  description = "HTTP y SSH publicos para el laboratorio"
   vpc_id      = aws_vpc.ha_vpc.id
 
   ingress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [aws_security_group.ha_alb_sg.id]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.admin_cidr]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {

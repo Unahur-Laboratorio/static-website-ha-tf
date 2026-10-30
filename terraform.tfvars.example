@@ -2,5 +2,4 @@ aws_region         = "us-east-1"
 availability_zones = ["us-east-1a", "us-east-1b"]
 ami_id             = "ami-REEMPLAZAR"
 key_pair_name      = "REEMPLAZAR_NOMBRE_KEY_PAIR"
-admin_cidr         = "203.0.113.10/32"
 instance_type      = "t2.nano"

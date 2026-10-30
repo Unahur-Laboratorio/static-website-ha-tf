@@ -8,7 +8,7 @@ Practica de alta disponibilidad en AWS: VPC propia, dos subnets publicas en AZ d
 - Credenciales temporales de Learner Lab vigentes, incluido el token de sesion. No incluirlas en este repositorio ni en variables Terraform.
 - AMI `staticweb-ami` creada en la practica manual, con Apache habilitado y el sitio publicado. Terraform no crea ni elimina esa AMI.
 - Key pair existente en la misma region, AMI x86_64 y un tipo de instancia compatible permitido por el laboratorio.
-- Dos AZ disponibles de la region elegida y la IP publica administrativa para SSH.
+- Dos AZ disponibles de la region elegida.
 
 Cada alumno trabaja en su cuenta de laboratorio. No ejecutar dos copias independientes en la misma cuenta y region con estos mismos nombres: pueden colisionar con recursos existentes. El ALB manual `ha-alb` y el Target Group `ha-tg` deben haberse eliminado antes de este despliegue. Terraform no adopta automaticamente recursos creados manualmente.
 
@@ -22,7 +22,9 @@ cd static-website-ha-tf
 cp terraform.tfvars.example terraform.tfvars
 ```
 
-Editar `terraform.tfvars`: reemplazar AMI ID, nombre del key pair e IP administrativa. `203.0.113.10/32` es un ejemplo, no una IP para usar. Si se cambia la region, ajustar tambien las AZ, AMI y key pair.
+Editar `terraform.tfvars`: reemplazar AMI ID y nombre del key pair. Si se cambia la region, ajustar tambien las AZ, AMI y key pair.
+
+Las EC2 permiten HTTP 80 y SSH 22 desde `0.0.0.0/0`; el ALB permite HTTP 80 desde ese mismo origen. Esta apertura se usa solo para el laboratorio. En produccion, restringir SSH al origen administrativo y HTTP de las EC2 al Security Group del ALB.
 
 ```bash
 aws sts get-caller-identity
@@ -43,7 +45,7 @@ Revisar el plan antes de confirmar. Los comandos `plan`, `apply` y `destroy` req
 | `main.tf` | Versiones y provider AWS |
 | `variables.tf` | Parametros de la practica |
 | `redes.tf` | VPC, IGW, subnets, rutas y asociaciones |
-| `security_groups.tf` | HTTP publico al ALB, HTTP a EC2 solo desde ALB y SSH desde admin_cidr |
+| `security_groups.tf` | HTTP publico al ALB; HTTP y SSH publicos a las EC2 |
 | `instancias.tf` | Las dos EC2, inicialmente sin User Data |
 | `load_balancer.tf` | ALB, listener, Target Group y registro de EC2 |
 | `outputs.tf` | IDs, direcciones y URL |

@@ -30,13 +30,3 @@ variable "instance_type" {
   type        = string
   default     = "t2.nano"
 }
-
-variable "admin_cidr" {
-  description = "IPv4 publica administrativa con mascara /32 para SSH"
-  type        = string
-
-  validation {
-    condition     = can(cidrnetmask(var.admin_cidr)) && can(regex("/32$", var.admin_cidr))
-    error_message = "Indicar una IPv4 publica con mascara /32."
-  }
-}
